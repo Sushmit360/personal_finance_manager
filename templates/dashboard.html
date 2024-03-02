@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container dashboard">
+    <h1>Dashboard</h1>
+    <p>Welcome back, {{ current_user.username }}!</p>
+
+    <!-- Transaction Management Links -->
+    <div class="dashboard-actions">
+        <a href="{{ url_for('transactions') }}" class="btn">View Transactions</a>
+        <a href="{{ url_for('add_transaction') }}" class="btn">Add New Transaction</a>
+    </div>
+    
+    <!-- Logout Button -->
+    <div class="logout">
+        <a href="{{ url_for('logout') }}" class="btn">Logout</a>
+    </div>
+</div>
+{% endblock %}
