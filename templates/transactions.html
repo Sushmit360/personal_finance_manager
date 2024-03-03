@@ -2,8 +2,14 @@
 
 {% block content %}
 <div class="container">
-    <h1>Your Transactions</h1>
+    <h1 style="color: #a0f1ff;">Your Transactions</h1>
     <a href="{{ url_for('add_transaction') }}" class="btn">Add New Transaction</a>
+
+    <div class="go-back">
+        <a href="{{ url_for('home') }}" class="btn">Go Back to Dashboard</a>
+    </div>
+    
+    {% if transactions %}
     <table class="table">
         <thead>
             <tr>
@@ -19,17 +25,26 @@
             {% for transaction in transactions %}
             <tr>
                 <td>{{ transaction.type }}</td>
-                <td>${{ transaction.amount | round(2) }}</td>
+                <td>${{ '%.2f'|format(transaction.amount) }}</td>
                 <td>{{ transaction.date.strftime('%Y-%m-%d') }}</td>
                 <td>{{ transaction.category.name }}</td>
                 <td>{{ transaction.description }}</td>
                 <td>
                     <a href="{{ url_for('edit_transaction', transaction_id=transaction.id) }}" class="btn">Edit</a>
-                    <a href="{{ url_for('delete_transaction', transaction_id=transaction.id) }}" class="btn" onclick="return confirm('Are you sure?');">Delete</a>
+                    <!-- Delete Transaction Form -->
+                    <form action="{{ url_for('delete_transaction', transaction_id=transaction.id) }}" method="post" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this transaction?');">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit" class="btn">Delete</button>
+                    </form>
+                    
+                    
                 </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
+    {% else %}
+    <p>No transactions found. Start adding some!</p>
+    {% endif %}
 </div>
 {% endblock %}

@@ -18,6 +18,6 @@ class TransactionForm(FlaskForm):
     type = SelectField('Type', choices=[('Expense', 'Expense'), ('Income', 'Income')], validators=[DataRequired()])
     amount = DecimalField('Amount', validators=[DataRequired()])
     date = DateField('Date', format='%Y-%m-%d', validators=[DataRequired()])
-    description = StringField('Description')
-    category_id = SelectField('Category', coerce=int, validators=[DataRequired()])
+    description = StringField('Description', validators=[DataRequired()])
+    category = StringField('Category', validators=[DataRequired()])  # Text input for category name
     submit = SubmitField('Submit')

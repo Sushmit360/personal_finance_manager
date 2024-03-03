@@ -2,17 +2,28 @@
 
 {% block content %}
 <div class="container dashboard">
-    <h1>Dashboard</h1>
-    <p>Welcome back, {{ current_user.username }}!</p>
+    <video autoplay muted id="dashboardVideo" style="position: fixed; right: 0; bottom: 0; min-width: 100%; min-height: 100%; z-index: -1;">
+        <source src="/static/videos/video.mp4" type="video/mp4">
+        Your browser does not support HTML5 video.
+    </video>
+
+    
+    <h1 style="text-align: left;">◉ Dashboard</h1>
+    <p style="text-align: left; margin: 30; size: 30;">Welcome back, {{ current_user.username }}!</p>
 
     <!-- Transaction Management Links -->
-    <div class="dashboard-actions">
+    <div class="dashboard-actions" style="align-items: flex-start;">
         <a href="{{ url_for('transactions') }}" class="btn">View Transactions</a>
         <a href="{{ url_for('add_transaction') }}" class="btn">Add New Transaction</a>
+        <a href="{{ url_for('financial_reports') }}" class="btn">Financial Reports</a>
     </div>
-    
+    <br>
+    <br>
+    <br>
+    <br>
+    <br> 
     <!-- Logout Button -->
-    <div class="logout">
+    <div class="logout" style="text-align: left;">
         <a href="{{ url_for('logout') }}" class="btn">Logout</a>
     </div>
 </div>

@@ -2,8 +2,15 @@
 
 {% block content %}
 <div class="welcome">
-    <h1>Welcome to Personal Finance Manager</h1>
-    <p>Manage your finances with ease.</p>
+    <video autoplay muted id="dashboardVideo" style="position: fixed; right: 0; bottom: 0; min-width: 100%; min-height: 100%; z-index: -1;">
+        <source src="/static/videos/video_home.mp4" type="video/mp4">
+        Your browser does not support HTML5 video.
+    </video>
+
+    <img src="/static/images/logo.png" style="width: 500px;">
+
+    <h1 style="color: rgb(161, 250, 255); text-shadow: -2px -2px 0 #150678, 1px -1px 0 #150678, -1px 1px 0 #150678, 1px 1px 0 #150678;">Welcome to Your Personal Finance Manager</h1>
+    <p style="color: rgb(161, 250, 255); text-shadow: -2px -2px 0 #150678, 1px -1px 0 #150678, -1px 1px 0 #150678, 1px 1px 0 #150678;">Manage your finances with ease.</p>
     <div class="actions">
         <a href="{{ url_for('login') }}" class="btn">Login</a>
         <a href="{{ url_for('register') }}" class="btn">Sign Up</a>
