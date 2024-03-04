@@ -81,20 +81,34 @@ body {
     padding: 20px;
 }
 
-.table {
+table {
     width: 100%;
+    border-collapse: separate;
     margin-top: 20px;
-    border-collapse: collapse;
-    color: #a0f1ff;
+    border-spacing: 0;
+    border-radius: 10px;
+    overflow: hidden; /* Ensures the rounded corners for the table */
+    background-image: linear-gradient(to bottom right, #0a0f0d, #214265, #2a628f); /* Adjusted gradient for navy deep blue */
+    color: white; /* Table text color */
 }
 
-.table, .table th, .table td {
-    border: 1px solid #533a8f;
-}
-
-.table th, .table td {
+th, td {
     padding: 10px;
-    text-align: left;
+    text-align: center;
+    border: 1px solid #17375e; /* Adjusted border color for deeper blue */
+}
+
+th {
+    background-color: #17375e; /* Adjusted header background color for deeper blue */
+    font-weight: bold;
+}
+
+tr:nth-child(even) {
+    background-color: #2a3f5f; /* Adjusted even row background color for a blend with the navy theme */
+}
+
+tr:nth-child(odd) {
+    background-color: #1e304e; /* Adjusted odd row background color for a blend with the navy theme */
 }
 
 .logout {
