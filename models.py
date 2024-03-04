@@ -3,7 +3,9 @@ from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 
+
 db = SQLAlchemy()
+
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -35,3 +37,12 @@ class Category(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     user = db.relationship('User', backref=db.backref('categories', lazy=True))
 
+class Budget(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    amount = db.Column(db.Float, nullable=False)
+    category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    timeframe = db.Column(db.String(50), nullable=False)  # e.g., 'Monthly', 'Annually'
+    
+    category = db.relationship('Category', backref=db.backref('budgets', lazy=True))
+    user = db.relationship('User', backref=db.backref('budgets', lazy=True))

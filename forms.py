@@ -21,3 +21,9 @@ class TransactionForm(FlaskForm):
     description = StringField('Description', validators=[DataRequired()])
     category = StringField('Category', validators=[DataRequired()])  # Text input for category name
     submit = SubmitField('Submit')
+
+class BudgetForm(FlaskForm):
+    amount = DecimalField('Budget Amount', validators=[DataRequired()])
+    category = StringField('Category', validators=[DataRequired()])  # Utilize a dropdown in the template if preferred
+    timeframe = SelectField('Timeframe', choices=[('Monthly', 'Monthly'), ('Annually', 'Annually')], validators=[DataRequired()])
+    submit = SubmitField('Set Budget')

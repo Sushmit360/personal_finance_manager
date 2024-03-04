@@ -3,9 +3,12 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_user, logout_user, current_user, login_required, UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
-from forms import LoginForm, RegistrationForm, TransactionForm
-from models import db, User, Transaction, Category
+from forms import BudgetForm, LoginForm, RegistrationForm, TransactionForm
+from models import Budget, db, User, Transaction, Category
 from flask_wtf.csrf import CSRFProtect
+from flask_migrate import Migrate
+from sqlalchemy import func
+from flask_wtf import FlaskForm
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '123654Ss#'
@@ -14,6 +17,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 csrf = CSRFProtect(app)
 
 db.init_app(app)
+migrate = Migrate(app, db)
 
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
@@ -22,6 +26,12 @@ login_manager.login_message_category = 'info'
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
+def currency_format(value):
+    return "${:,.2f}".format(value)
+
+# Add the filter to the Jinja2 environment
+app.jinja_env.filters['currency'] = currency_format
 
 @app.route('/')
 def home():
@@ -167,6 +177,57 @@ def financial_reports():
                            category_names=category_names, 
                            category_totals=category_totals)
 
+
+@app.route('/add_budget', methods=['GET', 'POST'])
+@login_required
+def add_budget():
+    form = BudgetForm()
+    if form.validate_on_submit():
+        category_name = form.category.data
+        category = Category.query.filter_by(name=category_name, user_id=current_user.id).first()
+        if not category:
+            category = Category(name=category_name, user_id=current_user.id)
+            db.session.add(category)
+            db.session.commit()
+            
+        budget = Budget(amount=form.amount.data, category_id=category.id, user_id=current_user.id, timeframe=form.timeframe.data)
+        db.session.add(budget)
+        db.session.commit()
+        flash('Your budget has been set!', 'success')
+        return redirect(url_for('home'))
+    return render_template('add_budget.html', title='Set a New Budget', form=form)
+
+
+class DeleteForm(FlaskForm):
+    pass  # This form is only used for CSRF protection
+
+
+@app.route('/budgets')
+@login_required
+def budgets():
+    form = DeleteForm()
+    budgets_with_expenses = []
+    user_budgets = Budget.query.filter_by(user_id=current_user.id).all()
+    for budget in user_budgets:
+        total_expenses = db.session.query(func.sum(Transaction.amount)).filter(
+            Transaction.user_id == current_user.id,
+            Transaction.category_id == budget.category_id,
+            Transaction.type == 'Expense' 
+        ).scalar() or 0  # Fallback to 0 if no expenses found
+        budgets_with_expenses.append({'budget': budget, 'expenses': total_expenses})
+    
+    return render_template('budget.html', budgets=budgets_with_expenses, form=form)
+
+@app.route('/delete_budget/<int:budget_id>', methods=['POST'])
+@login_required
+def delete_budget(budget_id):
+    budget_to_delete = Budget.query.get_or_404(budget_id)
+    if budget_to_delete.user_id != current_user.id:
+        abort(403)  # Forbidden access if the budget doesn't belong to the current user
+    db.session.delete(budget_to_delete)
+    db.session.commit()
+    flash('Budget deleted successfully', 'success')
+    return redirect(url_for('budgets'))
 
 
 # Make sure to implement these based on your application's needs

@@ -10,15 +10,17 @@
     
     <h1 style="text-align: left;">◉ Dashboard</h1>
     <p style="text-align: left; margin: 30; size: 30;">Welcome back, {{ current_user.username }}!</p>
-
+    <p style="text-align: left;"">    -----------------------------------------------------</p>
     <!-- Transaction Management Links -->
     <div class="dashboard-actions" style="align-items: flex-start;">
         <a href="{{ url_for('transactions') }}" class="btn">View Transactions</a>
         <a href="{{ url_for('add_transaction') }}" class="btn">Add New Transaction</a>
+        <p>    -----------------------------------------------------</p>
         <a href="{{ url_for('financial_reports') }}" class="btn">Financial Reports</a>
+        <p>    -----------------------------------------------------</p>
+        <a href="{{ url_for('budgets') }}" class="btn">View Budgets</a>
+        <a href="{{ url_for('add_budget') }}" class="btn">Set a New Budget</a>
     </div>
-    <br>
-    <br>
     <br>
     <br>
     <br> 
